@@ -1,14 +1,1 @@
-
-{
-  "products": [
-    {
-        "id": 1,
-        "name": "Product 1",
-        "description": "Description Product 1",
-        "price": 100,
-        "quantity": 10,
-        "category": "Category 1"
-    }
-  ]
-}
-  
+[{"id":"06b59096-ec87-4d95-8dd1-d1b94625f65c","name":"Product 1","description":"Description Product 1","price":100,"quantity":10,"category":"Category 1"}]
