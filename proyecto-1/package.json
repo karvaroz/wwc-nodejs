@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "standard --fix",
-    "start": "nodemon server.js --watch"
+    "start": "nodemon app.js --watch"
   },
   "keywords": [],
   "author": "",

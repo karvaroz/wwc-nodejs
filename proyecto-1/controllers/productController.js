@@ -8,7 +8,12 @@ const getAllProducts = async (req, res) => {
 	try {
 		const fileData = await fs.promises.readFile(filePath, "utf-8");
 		const products = await JSON.parse(fileData);
-		if (products) res.status(200).json(products);
+		if (products)
+			res.status(200).json({
+				status: 200,
+				msg: "List of products",
+				data: products,
+			});
 	} catch (error) {
 		res.status(500).json({ error: error });
 	}
@@ -24,7 +29,11 @@ const addProduct = async (req, res) => {
 		const products = await JSON.parse(fileData);
 		products.push(newProduct);
 		await fs.promises.writeFile(filePath, JSON.stringify(products));
-		res.status(201).json(newProduct);
+		res.status(201).json({
+			status: 201,
+			msg: "Product successfully added",
+			data: newProduct,
+		});
 	} catch (error) {
 		res.status(500).json({ error: error });
 	}
@@ -51,8 +60,8 @@ const updateProductById = async (req, res) => {
 		});
 
 		return res.status(200).json({
-			success: `Product has been updated`,
-			productToUpdate,
+			status: 200,
+			msg: `Product has been updated`,
 		});
 	} catch (error) {
 		res.status(500).json({ error: error });
@@ -73,11 +82,16 @@ const deleteProductById = async (req, res) => {
 				filePath,
 				JSON.stringify(productsWithoutDeleted)
 			);
-			return res.status(200).json(`Delected ${req.params.id} successfully`);
+			return res.status(200).json({
+				status: 200,
+				msg: `Delected ${req.params.id} successfully`,
+				data: products,
+			});
 		}
-		return res
-			.status(404)
-			.json(`Product with id: ${req.params.id} could not be deleted not found`);
+		return res.status(404).json({
+			status: 404,
+			msg: `Product with id: ${req.params.id} could not be deleted not found`,
+		});
 	} catch (error) {
 		res.status(500).json({ error: error });
 	}
