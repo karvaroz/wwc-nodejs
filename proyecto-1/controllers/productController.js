@@ -1,21 +1,28 @@
 const fs = require("fs");
 const path = require("path");
 const { randomUUID } = require("crypto");
+const productSchema = require("../utils/schema");
 
 const filePath = path.resolve(`${"./db"}/productsDb.txt`);
+const products = JSON.parse(fs.readFileSync(filePath));
 
 const getAllProducts = async (req, res) => {
 	try {
-		const fileData = await fs.promises.readFile(filePath, "utf-8");
-		const products = await JSON.parse(fileData);
-		if (products)
-			res.status(200).json({
-				status: 200,
-				msg: "List of products",
-				data: products,
-			});
+		res.status(200).json({
+			status: 200,
+			msg: "List of products",
+			data: products,
+		});
 	} catch (error) {
-		res.status(500).json({ error: error });
+		res.status(500).json({ error });
+	}
+};
+
+const saveInDB = async (data) => {
+	try {
+		await fs.promises.writeFile(filePath, JSON.stringify(data));
+	} catch (error) {
+		console.log(error);
 	}
 };
 
@@ -25,54 +32,51 @@ const addProduct = async (req, res) => {
 			id: randomUUID(),
 			...req.body,
 		};
-		const fileData = await fs.promises.readFile(filePath, "utf-8");
-		const products = await JSON.parse(fileData);
 		products.push(newProduct);
-		await fs.promises.writeFile(filePath, JSON.stringify(products));
+		saveInDB(products);
 		res.status(201).json({
 			status: 201,
 			msg: "Product successfully added",
 			data: newProduct,
 		});
+
+		res.status(422).json({
+			message: "Invalid request",
+		});
 	} catch (error) {
-		res.status(500).json({ error: error });
+		console.log(error);
+		res.status(500).json({ error });
 	}
 };
 
 const updateProductById = async (req, res) => {
 	try {
-		const fileData = await fs.promises.readFile(filePath, "utf-8");
-		const products = await JSON.parse(fileData);
-
 		const { name, description, price, quantity, category } = req.body;
 
 		const productToUpdate = products.map((product) => {
 			if (product.id === req.params.id) {
 				return {
 					id: product.id,
-					name: name ? name : product.name,
-					description: description ? description : product.description,
-					price: price ? price : product.price,
-					quantity: quantity ? quantity : product.quantity,
-					category: category ? category : product.category,
+					name: name || product.name,
+					description: description || product.description,
+					price: price || product.price,
+					quantity: quantity || product.quantity,
+					category: category || product.category,
 				};
 			}
 		});
 
 		return res.status(200).json({
 			status: 200,
-			msg: `Product has been updated`,
+			msg: "Product has been updated",
 		});
 	} catch (error) {
-		res.status(500).json({ error: error });
+		res.status(500).json({ error });
 	}
 };
 
 const deleteProductById = async (req, res) => {
 	try {
-		const fileData = await fs.promises.readFile(filePath, "utf-8");
-		const products = await JSON.parse(fileData);
-
 		const productId = products.find((product) => product.id === req.params.id);
 		if (productId) {
 			const productsWithoutDeleted = products.filter(
@@ -93,7 +97,7 @@ const deleteProductById = async (req, res) => {
 			msg: `Product with id: ${req.params.id} could not be deleted not found`,
 		});
 	} catch (error) {
-		res.status(500).json({ error: error });
+		res.status(500).json({ error });
 	}
 };
 
