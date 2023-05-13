@@ -1,9 +1,8 @@
-const ProductSchema = require("../models/product.model");
-const ProductCollection = require("../models/product.model");
+const { ProductModel } = require("../models");
 
 const getAllProducts = async () => {
 	try {
-		const products = await ProductCollection.find();
+		const products = await ProductModel.find();
 		return products;
 	} catch (error) {
 		throw { status: 500, message: error };
@@ -12,8 +11,8 @@ const getAllProducts = async () => {
 
 const getOneProductById = async (productId) => {
 	try {
-		const producyById = await ProductCollection.find({ _id: productId });
-		return producyById;
+		const productById = await ProductModel.find({ _id: productId });
+		return productById;
 	} catch (error) {
 		throw { status: 500, message: error };
 	}
@@ -21,7 +20,7 @@ const getOneProductById = async (productId) => {
 
 const createNewProduct = async (product) => {
 	try {
-		const createProduct = await new ProductSchema(product).save();
+		const createProduct = await new ProductModel(product).save();
 		return createProduct;
 	} catch (error) {
 		throw { status: 500, message: error };
@@ -30,7 +29,7 @@ const createNewProduct = async (product) => {
 
 const updateOneProductById = async (productId, dataUpdated) => {
 	try {
-		const productUpdated = await ProductCollection.findByIdAndUpdate(
+		const productUpdated = await ProductModel.findByIdAndUpdate(
 			{ _id: productId },
 			dataUpdated,
 			{
@@ -45,7 +44,7 @@ const updateOneProductById = async (productId, dataUpdated) => {
 
 const deleteOneProductById = async (productId) => {
 	try {
-		const productToDelete = await ProductCollection.findByIdAndRemove({
+		const productToDelete = await ProductModel.findByIdAndRemove({
 			_id: productId,
 		});
 		if (!productToDelete) {
