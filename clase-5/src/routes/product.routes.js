@@ -7,7 +7,7 @@ const ProductRouter = Router();
 
 ProductRouter.get("/", ProductController.getAllProducts)
 	.get("/:productId", ValidMongoId, ProductController.getOneProductById)
-	.post("/", ProductController.createNewProduct)
+	.post("/", ProductSchemaValidation, ProductController.createNewProduct)
 	.patch("/:productId", ValidMongoId, ProductController.updateOneProductById)
 	.delete("/:productId", ValidMongoId, ProductController.deleteOneProductById);
 
