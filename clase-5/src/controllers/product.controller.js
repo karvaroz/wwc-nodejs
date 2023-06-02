@@ -7,7 +7,6 @@ const getAllProducts = async (req, res) => {
 			.status(200)
 			.json({ status: "OK", total: products.length, data: products });
 	} catch (error) {
-		console.log(error);
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });
@@ -27,10 +26,9 @@ const getOneProductById = async (req, res) => {
 
 	try {
 		const productById = await ProductService.getOneProductById(productId);
-		res.status(200).json({ status: "OK", data: productById });
+		if (productById) res.status(200).json({ status: "OK", data: productById });
+		res.status(404).json({ status: "OK", data: "Not found" });
 	} catch (error) {
-		console.log(error);
-
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });
@@ -44,8 +42,6 @@ const createNewProduct = async (req, res) => {
 		const createProduct = await ProductService.createNewProduct(product);
 		res.status(201).json({ status: "OK", data: createProduct });
 	} catch (error) {
-		console.log(error);
-
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });
@@ -55,14 +51,19 @@ const createNewProduct = async (req, res) => {
 const updateOneProductById = async (req, res) => {
 	const { productId } = req.params;
 	const productInfo = req.body;
+
+	const productById = await ProductService.getOneProductById(productId);
+	if (!productById) {
+		res.status(404).json({ status: "OK", data: "Not found" });
+		return;
+	}
+
 	try {
 		await ProductService.updateOneProductById(productId, productInfo);
 		res
 			.status(200)
 			.json({ status: "OK", data: `Product ${productId} updated` });
 	} catch (error) {
-		console.log(error);
-
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });
@@ -79,14 +80,19 @@ const deleteOneProductById = async (req, res) => {
 		});
 		return;
 	}
+
+	const productById = await ProductService.getOneProductById(productId);
+	if (!productById) {
+		res.status(404).json({ status: "OK", data: "Not found" });
+		return;
+	}
+
 	try {
 		await ProductService.deleteOneProductById(productId);
 		res
 			.status(200)
 			.json({ status: "OK", data: `Product ${productId} deleted` });
 	} catch (error) {
-		console.log(error);
-
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });

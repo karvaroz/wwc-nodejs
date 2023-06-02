@@ -1,11 +1,11 @@
 const Joi = require("joi");
 
 const ProductSchema = Joi.object({
-	name: Joi.string().alphanum().required(),
-	description: Joi.string().alphanum(),
-	quantity: Joi.number().required(),
-	price: Joi.number().required(),
-	category: Joi.string().required(),
+	name: Joi.string().required(),
+	description: Joi.string(),
+	quantity: Joi.number(),
+	price: Joi.number(),
+	category: Joi.string(),
 });
 
 module.exports = ProductSchema;

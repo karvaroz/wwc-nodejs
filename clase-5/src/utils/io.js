@@ -6,10 +6,6 @@ module.exports = (socket) => {
 		socket.emit("chat", data);
 	});
 
-	// socket.on("disconnect", () => {
-	// 	console.log("Connection disconnected");
-	// });
-
 	socket.emit("Close", () => {
 		console.log("Connection closed");
 	});

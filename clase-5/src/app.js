@@ -1,21 +1,25 @@
 require("dotenv").config();
-
 const express = require("express");
-const { ProductRouter, UserRouter } = require("./routes");
-
-const { ErrorHandler, NotFoundHandler } = require("./middlewares");
-const { PostgresDB, MongoDB } = require("./database");
 const http = require("http");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
-PORT = process.env.PORT || 3000;
+const { ProductRouter, UserRouter } = require("./routes");
+const { ErrorHandler, NotFoundHandler } = require("./middlewares");
+const { PostgresDB, MongoDB } = require("./database");
 
+const PORT = process.env.PORT || 3000;
 const app = express();
 const server = http.createServer(app);
+
 const io = new Server(server, { cors: { origin: "*" } });
 io.on("connection", require("./utils/io"));
 
+app.use(cors());
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use("/", require("./routes/playground.routes"));
 app.use("/api/v1/products", ProductRouter);
 app.use("/api/v1/users", UserRouter);

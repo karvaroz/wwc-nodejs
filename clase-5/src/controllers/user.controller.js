@@ -24,7 +24,8 @@ const getOneUserById = async (req, res) => {
 
 	try {
 		const userById = await UserService.getOneUserById(userId);
-		res.status(200).json({ status: "OK", data: userById });
+		if (userById) res.status(200).json({ status: "OK", data: userById });
+		res.status(404).json({ status: "OK", data: "Not found" });
 	} catch (error) {
 		res
 			.status(error?.status || 500)
@@ -39,7 +40,6 @@ const createNewUser = async (req, res) => {
 		const createUser = await UserService.createNewUser(user);
 		res.status(201).json({ status: "OK", data: createUser });
 	} catch (error) {
-		console.log(error);
 		res
 			.status(error?.status || 500)
 			.json({ status: "FAILED", data: { error: error?.message || error } });
@@ -49,6 +49,12 @@ const createNewUser = async (req, res) => {
 const updateOneUserById = async (req, res) => {
 	const { userId } = req.params;
 	const userInfo = req.body;
+
+	const userById = await UserService.getOneUserById(userId);
+	if (!userById) {
+		res.status(404).json({ status: "OK", data: "Not found" });
+		return;
+	}
 	try {
 		await UserService.updateOneUserById(userId, userInfo);
 		res.status(200).json({ status: "OK", data: `User ${userId} updated` });
@@ -58,6 +64,7 @@ const updateOneUserById = async (req, res) => {
 			.json({ status: "FAILED", data: { error: error?.message || error } });
 	}
 };
+
 const deleteOneUserById = async (req, res) => {
 	const { userId } = req.params;
 
@@ -68,6 +75,13 @@ const deleteOneUserById = async (req, res) => {
 		});
 		return;
 	}
+
+	const userById = await UserService.getOneUserById(userId);
+	if (!userById) {
+		res.status(404).json({ status: "OK", data: "Not found" });
+		return;
+	}
+
 	try {
 		await UserService.deleteOneUserById(userId);
 		res.status(200).json({ status: "OK", data: `Product ${userId} deleted` });

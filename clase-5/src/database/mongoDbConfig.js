@@ -5,7 +5,6 @@ const dbConnectionMongo = async () => {
 		await mongoose.connect(process.env.MONGO);
 		console.log("✔ Connected to Mongo Database - Product");
 	} catch (error) {
-		console.log(error);
 		throw new Error("✖ Couldn't connect to Mongo Database - Product");
 	}
 };
