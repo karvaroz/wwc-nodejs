@@ -1,4 +1,5 @@
 const { UserDB } = require("../database");
+const { encrypt } = require("../helpers/handleBcrypt");
 
 const getAllUsers = async () => {
 	try {
@@ -16,7 +17,13 @@ const getOneUserById = async (userId) => {
 };
 const createNewUser = async (user) => {
 	try {
-		return await UserDB.createNewUser(user);
+		const { password } = user;
+		const passwordHash = await encrypt(password);
+
+		return await UserDB.createNewUser({
+			...user,
+			password: passwordHash,
+		});
 	} catch (error) {
 		throw error;
 	}
