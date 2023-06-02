@@ -13,13 +13,7 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, { cors: { origin: "*" } });
-
-io.on("connection", (socket) => {
-	console.log("Connection in Socket");
-	socket.on("disconnect", () => {
-		console.log("Connection disconnected");
-	});
-});
+io.on("connection", require("./utils/io"));
 
 app.use(cors());
 
