@@ -1,7 +1,12 @@
-exports.ErrorHandler = require("./errorHandler");
-exports.NotFoundHandler = require("./notFoundHandler");
+exports.ErrorHandler = require("./handlers/errorHandler");
+exports.NotFoundHandler = require("./handlers/notFoundHandler");
+
 exports.ProductSchemaValidation = require("./product.middleware");
-exports.ProductSchema = require("./product.schema");
 exports.UserSchemaValidation = require("./user.middleware");
-exports.UserSchema = require("./user.schema");
+exports.LoginSchemaValidation = require("./login.middleware");
+
+exports.ProductSchema = require("./schemas/product.schema");
+exports.UserSchema = require("./schemas/user.schema");
+exports.LoginSchema = require("./schemas/login.schema");
+
 exports.ValidMongoId = require("./validMongoId");

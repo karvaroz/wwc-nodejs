@@ -1,4 +1,4 @@
-const ProductSchema = require("./product.schema");
+const ProductSchema = require("./schemas/product.schema");
 
 const ProductSchemaValidation = (req, res, next) => {
 	const { error } = ProductSchema.validate(req.body, { abortEarly: false });

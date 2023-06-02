@@ -1,4 +1,4 @@
-const Userchema = require("./user.schema");
+const Userchema = require("./schemas/user.schema");
 
 const UserSchemaValidation = (req, res, next) => {
 	const { error } = Userchema.validate(req.body, { abortEarly: false });

@@ -1,4 +1,40 @@
+const { compare } = require("../helpers/handleBcrypt");
+const { UserModel } = require("../models");
 const { UserService } = require("../services");
+
+const loginUser = async (req, res) => {
+	const { email, password } = req.body;
+
+	const isUserRegistered = await UserModel.findOne({
+		where: {
+			email,
+		},
+	});
+
+	if (!isUserRegistered) {
+		res.status(404).send({
+			status: "FAILED",
+			data: { error: "Email not found, please register" },
+		});
+		return;
+	}
+
+	const isPasswordCorrect = await compare(password, isUserRegistered.password);
+	if (!isPasswordCorrect) {
+		res.status(401).send({
+			status: "FAILED",
+			data: { error: "Incorrect password" },
+		});
+		return;
+	}
+	try {
+		res.status(200).json({ status: "OK" });
+	} catch (error) {
+		res
+			.status(error?.status || 500)
+			.json({ status: "FAILED", data: { error: error?.message || error } });
+	}
+};
 
 const getAllUsers = async (req, res) => {
 	try {
@@ -25,7 +61,10 @@ const getOneUserById = async (req, res) => {
 	try {
 		const userById = await UserService.getOneUserById(userId);
 		if (userById) res.status(200).json({ status: "OK", data: userById });
-		res.status(404).json({ status: "OK", data: "Not found" });
+		res.status(404).send({
+			status: "FAILED",
+			data: { error: "Not found" },
+		});
 	} catch (error) {
 		res
 			.status(error?.status || 500)
@@ -52,7 +91,10 @@ const updateOneUserById = async (req, res) => {
 
 	const userById = await UserService.getOneUserById(userId);
 	if (!userById) {
-		res.status(404).json({ status: "OK", data: "Not found" });
+		res.status(404).send({
+			status: "FAILED",
+			data: { error: "Not found" },
+		});
 		return;
 	}
 	try {
@@ -78,7 +120,10 @@ const deleteOneUserById = async (req, res) => {
 
 	const userById = await UserService.getOneUserById(userId);
 	if (!userById) {
-		res.status(404).json({ status: "OK", data: "Not found" });
+		res.status(404).send({
+			status: "FAILED",
+			data: { error: "Not found" },
+		});
 		return;
 	}
 
@@ -93,6 +138,7 @@ const deleteOneUserById = async (req, res) => {
 };
 
 module.exports = {
+	loginUser,
 	getAllUsers,
 	getOneUserById,
 	createNewUser,

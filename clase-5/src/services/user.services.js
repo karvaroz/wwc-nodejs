@@ -1,6 +1,13 @@
 const { UserDB } = require("../database");
 const { encrypt } = require("../helpers/handleBcrypt");
 
+const loginUser = async (email, password) => {
+	try {
+	} catch (error) {
+		throw error;
+	}
+};
+
 const getAllUsers = async () => {
 	try {
 		return await UserDB.getAllUsers();
