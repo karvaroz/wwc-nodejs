@@ -5,9 +5,9 @@
   <title>Socket.IO chat</title>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    // if(!sessionStorage.getItem("token")) {
-    //   document.location.href = "/login";
-    // }
+    if (!sessionStorage.getItem("token")) {
+      document.location.href = "/login";
+    }
 
     const socket = io(null, {
       auth: {

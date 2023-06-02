@@ -4,12 +4,9 @@ const { PostgresDB } = require("../database");
 const User = PostgresDB.sequelize.define(
 	"User",
 	{
-		firstName: {
+		username: {
 			type: DataTypes.STRING,
 			allowNull: false,
-		},
-		lastName: {
-			type: DataTypes.STRING,
 		},
 		email: {
 			type: DataTypes.STRING,
