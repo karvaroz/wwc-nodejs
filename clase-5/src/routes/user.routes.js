@@ -1,21 +1,26 @@
 const { Router } = require("express");
 const { UserController } = require("../controllers");
-const { UserSchemaValidation, isAuthenticated } = require("../middlewares");
+const {
+	UserSchemaValidation,
+	isAuthenticated,
+	isRoleAdmin,
+} = require("../middlewares");
 
 const UserRouter = Router();
 
-UserRouter.get("/", UserController.getAllUsers);
-UserRouter.get("/:userId", UserController.getOneUserById);
-UserRouter.post(
-	"/",
+UserRouter.get("/", isAuthenticated, UserController.getAllUsers);
+UserRouter.get("/:userId", isAuthenticated, UserController.getOneUserById);
+UserRouter.post("/", UserSchemaValidation, UserController.createNewUser);
+UserRouter.patch(
+	"/:userId",
 	isAuthenticated,
-	UserSchemaValidation,
-	UserController.createNewUser
+	// isRoleAdmin,
+	UserController.updateOneUserById
 );
-UserRouter.patch("/:userId", isAuthenticated, UserController.updateOneUserById);
 UserRouter.delete(
 	"/:userId",
 	isAuthenticated,
+	// isRoleAdmin,
 	UserController.deleteOneUserById
 );
 
