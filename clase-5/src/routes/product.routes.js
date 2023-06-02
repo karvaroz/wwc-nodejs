@@ -1,7 +1,11 @@
 const { Router } = require("express");
 
 const { ProductController } = require("../controllers");
-const { ValidMongoId, ProductSchemaValidation } = require("../middlewares");
+const {
+	isAuthenticated,
+	ValidMongoId,
+	ProductSchemaValidation,
+} = require("../middlewares");
 
 const ProductRouter = Router();
 
@@ -13,17 +17,20 @@ ProductRouter.get(
 );
 ProductRouter.post(
 	"/",
+	isAuthenticated,
 	ProductSchemaValidation,
 	ProductController.createNewProduct
 );
 ProductRouter.patch(
 	"/:productId",
 	ValidMongoId,
+	isAuthenticated,
 	ProductController.updateOneProductById
 );
 ProductRouter.delete(
 	"/:productId",
 	ValidMongoId,
+	isAuthenticated,
 	ProductController.deleteOneProductById
 );
 
