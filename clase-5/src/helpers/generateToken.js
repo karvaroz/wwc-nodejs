@@ -21,6 +21,4 @@ const verifyToken = async (token) => {
 	}
 };
 
-const decodeSign = (token) => {};
-
-module.exports = { tokenSign, verifyToken, decodeSign };
+module.exports = { tokenSign, verifyToken };

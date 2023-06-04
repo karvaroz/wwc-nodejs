@@ -12,7 +12,7 @@ const loginUser = async (req, res) => {
 	});
 
 	if (!isUserRegistered) {
-		res.status(404).send({
+		res.status(404).json({
 			status: "FAILED",
 			data: { error: "Email not found, please register" },
 		});
@@ -25,7 +25,7 @@ const loginUser = async (req, res) => {
 	);
 
 	if (!isPasswordCorrect) {
-		res.status(401).send({
+		res.status(401).json({
 			status: "FAILED",
 			data: { error: "Incorrect password" },
 		});
@@ -60,18 +60,12 @@ const getAllUsers = async (req, res) => {
 const getOneUserById = async (req, res) => {
 	const { userId } = req.params;
 
-	if (!userId) {
-		res.status(400).send({
-			status: "FAILED",
-			data: { error: "Parameter ':userId' can not be empty" },
-		});
-		return;
-	}
-
 	try {
 		const userById = await UserService.getOneUserById(userId);
-		if (userById) res.status(200).json({ status: "OK", data: userById });
-		res.status(404).send({
+		if (userById) {
+			return res.status(200).json({ status: "OK", data: userById });
+		}
+		res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});
@@ -100,12 +94,12 @@ const updateOneUserById = async (req, res) => {
 
 	const userById = await UserService.getOneUserById(userId);
 	if (!userById) {
-		res.status(404).send({
+		return res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});
-		return;
 	}
+
 	try {
 		const userUpdated = await UserService.updateOneUserById(userId, userInfo);
 		if (userUpdated)
@@ -121,20 +115,18 @@ const deleteOneUserById = async (req, res) => {
 	const { userId } = req.params;
 
 	if (!userId) {
-		res.status(400).json({
+		return res.status(400).json({
 			status: "FAILED",
 			data: { error: "Parameter ':userId' can not be empty" },
 		});
-		return;
 	}
 
 	const userById = await UserService.getOneUserById(userId);
 	if (!userById) {
-		res.status(404).send({
+		return res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});
-		return;
 	}
 	try {
 		await UserService.deleteOneUserById(userId);

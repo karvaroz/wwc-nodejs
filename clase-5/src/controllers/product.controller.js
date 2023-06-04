@@ -17,17 +17,12 @@ const getAllProducts = async (req, res) => {
 const getOneProductById = async (req, res) => {
 	const { productId } = req.params;
 
-	if (!productId) {
-		res.status(400).send({
-			status: "FAILED",
-			data: { error: "Parameter ':productId' can not be empty" },
-		});
-		return;
-	}
 	try {
 		const productById = await ProductService.getOneProductById(productId);
-		if (productById) res.status(200).json({ status: "OK", data: productById });
-		res.status(404).send({
+		if (productById) {
+			return res.status(200).json({ status: "OK", data: productById });
+		}
+		res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});
@@ -57,11 +52,10 @@ const updateOneProductById = async (req, res) => {
 
 	const productById = await ProductService.getOneProductById(productId);
 	if (!productById) {
-		res.status(404).send({
+		return res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});
-		return;
 	}
 	try {
 		const productUpdated = await ProductService.updateOneProductById(
@@ -92,7 +86,7 @@ const deleteOneProductById = async (req, res) => {
 
 	const productById = await ProductService.getOneProductById(productId);
 	if (!productById) {
-		res.status(404).send({
+		res.status(404).json({
 			status: "FAILED",
 			data: { error: "Not found" },
 		});

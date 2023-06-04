@@ -72,6 +72,7 @@
                 document.location.href = "/playground";
             });
         });
+
     </script>
 </head>
 
@@ -82,7 +83,9 @@
         <input type="text" name="username" placeholder="Username" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type='submit'>Login</button>
-        <label for='form-switch'><span>Register</span></label>
+        <a href="/register" target="_blank" rel="noopener noreferrer">
+            <label for='form-switch'><span>Register</span></label>
+        </a>
     </form>
 
     <form id='register-form' action="" method='post'>

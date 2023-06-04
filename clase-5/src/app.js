@@ -3,6 +3,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const morgan = require("morgan");
 
 const { ProductRouter, UserRouter, AuthRouter } = require("./routes");
 const { ErrorHandler, NotFoundHandler } = require("./middlewares");
@@ -16,7 +17,9 @@ const io = new Server(server, { cors: { origin: "*" } });
 io.on("connection", require("./utils/io"));
 
 app.use(cors());
-
+app.use(
+	morgan(":method :url :status :res[content-length] - :response-time ms")
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
